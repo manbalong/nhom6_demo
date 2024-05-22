@@ -2,7 +2,7 @@ from pgmpy.models import BayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
 
-# Define the structure of the Bayesian Network
+# Định nghĩa cấu trúc của mạng Bayes
 model = BayesianNetwork([
     ('Smoking', 'LungCancer'),
     ('Genetics', 'LungCancer'),
@@ -10,7 +10,7 @@ model = BayesianNetwork([
     ('LungCancer', 'ChestPain')
 ])
 
-# Define the Conditional Probability Distributions (CPDs)
+# Xác định phân phối xác suất có điều kiện (CPD)
 cpd_smoking = TabularCPD(variable='Smoking', variable_card=2, values=[[0.3], [0.7]])
 cpd_genetics = TabularCPD(variable='Genetics', variable_card=2, values=[[0.1], [0.9]])
 
@@ -35,21 +35,21 @@ cpd_chest_pain = TabularCPD(
     evidence_card=[2]
 )
 
-# Add CPDs to the model
+# Thêm CPDs vào model
 model.add_cpds(cpd_smoking, cpd_genetics, cpd_lung_cancer, cpd_cough, cpd_chest_pain)
 
-# Check if the model is valid
+# Kiểm tra xem model có hợp lệ không?
 assert model.check_model()
 
-# Perform inference
+# Thực hiện suy luận
 infer = VariableElimination(model)
 
-# Query the probability of Lung Cancer given evidence
-evidence = {'Smoking': 1, 'Genetics': 0}  # Evidence: Smoker and No genetic predisposition
+# Truy vấn xác suất ung thư phổi đưa ra bằng chứng
+evidence = {'Smoking': 1, 'Genetics': 0}  # Dẫn chứng: nguoi hut thuoc la va khong co khuynh huong di truyen
 result = infer.query(variables=['LungCancer'], evidence=evidence)
 print(result)
 
-# Query the probability of having a cough given Lung Cancer
+# Truy vấn xác suất bị ho do ung thư phổi
 evidence = {'LungCancer': 1}
 result = infer.query(variables=['Cough'], evidence=evidence)
 print(result)
